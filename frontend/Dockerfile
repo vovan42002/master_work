@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Create the production image
-FROM nginx:alpine-slim
+FROM nginx:alpine-slim AS production
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
