@@ -12,6 +12,6 @@ services:
       - -c
       - |
         echo "----------------------------------------------";
-        echo "To access frontend open link: http://localhost:8001";
+        echo "To access the frontend follow the link: http://localhost:8001";
         echo "----------------------------------------------";
         nginx -g 'daemon off;'
