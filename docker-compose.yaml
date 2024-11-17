@@ -7,11 +7,53 @@ services:
       target: production
     ports:
       - 8001:80
+
+  mongodb:
+    image: mongo:8
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: backend
+      MONGO_INITDB_ROOT_PASSWORD: backend-pass
+    volumes:
+      - .mongo:/data/db
+
+  backend:
+    image: backend-dev
+    depends_on:
+      - mongodb
+    build:
+      context: backend
+      target: production
+    ports:
+      - 8002:8000
+    environment:
+      MONGO_USER: backend
+      MONGO_PASSWORD: backend-pass
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: backend
+      MONGO_AUTH_DB_NAME: admin
+
+  mongosh:
+    image: rtsp/mongosh
+    depends_on:
+      - mongodb
+
+  greeting:
+    image: alpine
+    depends_on:
+      - frontend
+      - backend
+      - mongodb
     command:
       - sh
       - -c
       - |
+        sleep 1;
         echo "----------------------------------------------";
         echo "To access the frontend follow the link: http://localhost:8001";
         echo "----------------------------------------------";
-        nginx -g 'daemon off;'
+        echo "----------------------------------------------";
+        echo "To access the backend docs follow the link: http://localhost:8002/docs";
+        echo "----------------------------------------------";
