@@ -1,7 +1,33 @@
 services:
 
+  postgres:
+    container_name: postgres
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=auth
+    ports:
+      - "5433:5432"
+
+  auth_backend:
+    image: auth-dev
+    build:
+      context: auth_backend
+      target: production
+    ports:
+      - 8003:8000
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://postgres:postgres@postgres/auth"
+      SECRET_KEY: "your-secret-key"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "securepassword"
+
   frontend:
     image: frontend-dev
+    depends_on:
+      - auth_backend
     build:
       context: frontend
       target: production
@@ -56,4 +82,7 @@ services:
         echo "----------------------------------------------";
         echo "----------------------------------------------";
         echo "To access the backend docs follow the link: http://localhost:8002/docs";
+        echo "----------------------------------------------";
+        echo "----------------------------------------------";
+        echo "To access the auth docs follow the link: http://localhost:8003/docs";
         echo "----------------------------------------------";

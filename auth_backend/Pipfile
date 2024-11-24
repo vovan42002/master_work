@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+pydantic = { version = "*", extras = ["email"] }
+pydantic-settings = "*"
+bcrypt = "*"
+PyJWT = "*"
+python-jose = "*"
+asyncpg = "*"
+psycopg2-binary = "*"
+passlib = "*"
+python-multipart = "*"
+
+[requires]
+python_version = "3.12"

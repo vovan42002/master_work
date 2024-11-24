@@ -34,18 +34,22 @@ Return unique deployment identifier
 
 1. Create new user `POST /v1/users/`
 Possible roles: 
- * devops - full access to all routers
- * developer - full access to Schemas router
- * customer - can only get all available applications, view all versions of the applicatiuon and deploy/update/delete its own application
+ * admin - full access to all routers
+ * user - can only get all available applications, view all versions of the applicatiuon and deploy/update/delete its own application
 
 
 
-2. Block user `DELETE /v1/user/{user_id}`
+2. Delete user `DELETE /v1/users/{user_id}`
+3. Get user `GET /v1/users/{user_id}`
+4. Update user partially `PATCH /v1/users/{user_id}`
 
 
 #### Login
 
-1. Login and get a token ""
+1. Login and get a token `POST /v1/token`
+2. Refresh the roken `POST /v1/refresh_token`
+3. Logout `POST /v1/logout`
+
 
 
 ## DEBUG
