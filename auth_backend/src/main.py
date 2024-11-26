@@ -1,6 +1,7 @@
 import logging
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from endpoints import auth, user
 from schemas.config import settings
@@ -15,6 +16,14 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Authorization Service",
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers

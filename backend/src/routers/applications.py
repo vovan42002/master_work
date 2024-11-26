@@ -26,3 +26,10 @@ async def get_application_versions(application_name: str):
     return await service.get_all_versions_by_application_name(
         application_name=application_name
     )
+
+
+@router.get("/my", status_code=status.HTTP_200_OK, response_model=ApplicationsList)
+async def get_user_applications():
+    logging.info("Request to get all user deployments (applications)")
+    service = ApplicationsService()
+    return await service.get_all_applications()

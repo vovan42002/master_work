@@ -1,0 +1,51 @@
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 500px;
+}
+
+.header {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.app-name {
+    font-size: 16px;
+    color: #333;
+}
+
+.deploy-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}

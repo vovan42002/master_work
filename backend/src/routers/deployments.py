@@ -1,10 +1,11 @@
 import logging
 from fastapi import status, APIRouter
 from fastapi.responses import JSONResponse
-from schemas import DeploymentID, DeploymentCreate, DeploymentUpdate
+from schemas import DeploymentID, DeploymentCreate, DeploymentUpdate, ApplicationsList
 
 from services.deployment_service import DeploymentsService
 from services.app_schema import AppSchemaService
+from services.applications_service import ApplicationsService
 import uuid
 
 
