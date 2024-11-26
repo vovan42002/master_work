@@ -33,6 +33,9 @@ services:
       target: production
     ports:
       - 8001:80
+    environment:
+      REACT_APP_AUTH_SERVICE_BASE_URL: http://localhost:8003
+      REACT_APP_APPLICATIONS_SERVICE_BASE_URL: http://localhost:8002
 
   mongodb:
     image: mongo:8
