@@ -1,5 +1,5 @@
 from schemas import ApplicationsList, VersionsList
-from database import app_schemas_collection as collection
+from models import Application
 from fastapi import HTTPException, status
 
 
@@ -7,7 +7,9 @@ class ApplicationsService:
 
     @staticmethod
     async def get_all_applications() -> ApplicationsList:
-        documents = await collection.distinct(key="application_name")
+        documents = await Application.get_motor_collection().distinct(
+            key="application_name"
+        )
         if not documents:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -19,7 +21,7 @@ class ApplicationsService:
     async def get_all_versions_by_application_name(
         application_name: str,
     ) -> VersionsList:
-        documents = await collection.distinct(
+        documents = await Application.get_motor_collection().distinct(
             key="version", filter={"application_name": application_name}
         )
         if not documents:
