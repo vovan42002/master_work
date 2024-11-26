@@ -2,22 +2,31 @@ import logging
 from datetime import datetime
 
 from beanie import Document, Indexed
-from schemas import AppSchema, Deployment
+from schemas import AppSchema, DeploymentCreate
+from uuid import UUID
 
 
 logger = logging.getLogger(__name__)
 
 
-class ApplicationsCollection(AppSchema, Document):
+class Application(AppSchema, Document):
     adding_timestamp: Indexed(datetime)  # Indexed field for timestamp
 
     class Settings:
         name = "schemas"  # Collection name in MongoDB
 
 
-class DeploymentsCollection(Deployment, Document):
-    adding_timestamp: Indexed(datetime)  # Indexed field for timestamp
-    deployment_id: Indexed(int)
+class Counter(Document):
+    name: str
+    value: int
 
     class Settings:
-        name = "deployments"  # Collection name in MongoDB
+        name = "counters"
+
+
+class Deployment(DeploymentCreate, Document):
+    adding_timestamp: Indexed(datetime)  # Indexed field for timestamp
+    deployment_id: UUID
+
+    class Settings:
+        name = "deployments"

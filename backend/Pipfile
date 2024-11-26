@@ -8,6 +8,7 @@ fastapi = "*"
 uvicorn = "*"
 pydantic-settings = "*"
 motor = "*"
+beanie = "*"
 
 [requires]
 python_version = "3.12"

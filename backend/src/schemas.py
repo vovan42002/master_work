@@ -3,6 +3,7 @@ from enum import Enum
 from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings
 from typing import List, Optional, Dict
+from uuid import UUID
 
 
 class MongoSettings(BaseSettings):
@@ -131,9 +132,29 @@ class ApplicationsList(BaseModel):
 
 
 class DeploymentID(BaseModel):
-    deployment_id: int
+    deployment_id: UUID
 
 
 class DeploymentCreate(AppBaseSchema):
     username: str
+    parameters: Dict[str, str]
+
+
+class DeploymentUpdate(BaseModel):
+    version: str = Field(
+        ...,
+        title="Version",
+        description="Application version",
+        examples=["1.0.0", "1.0.9"],
+    )
+
+    # Validator for semantic versioning
+    @field_validator("version")
+    def validate_semantic_version(cls, value):
+        if not re.match(r"^\d+\.\d+\.\d+$", value):
+            raise ValueError(
+                "version must be in semantic versioning format (MAJOR.MINOR.PATCH)"
+            )
+        return value
+
     parameters: Dict[str, str]
