@@ -100,3 +100,14 @@ async def get_deployment_status(deployment_id: uuid.UUID):
         status=deployment.status,
         info=deployment.info,
     )
+
+
+@router.get(
+    "/{deployment_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=DeploymentCreate,
+)
+async def get_deployment(deployment_id: uuid.UUID):
+    logger.info(f"Request to get deployment with id={deployment_id}")
+    service = DeploymentsService()
+    return await service.get_deployment_by_id(deployment_id=deployment_id)
