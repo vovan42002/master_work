@@ -1,4 +1,4 @@
-from schemas import DeploymentCreate, DeploymentID, DeploymentUpdate
+from schemas import DeploymentCreate, DeploymentID, DeploymentUpdate, DeploymentStatus
 from fastapi import HTTPException, status
 from models import Deployment
 import uuid
@@ -45,6 +45,22 @@ class DeploymentsService:
             {
                 Deployment.version: new_deployment.version,
                 Deployment.parameters: new_deployment.parameters,
+            }
+        )
+        if result.modified_count == 0:
+            raise DeploymentsService._raise_http_error(deployment_id)
+        return DeploymentID(deployment_id=deployment_id)
+
+    @staticmethod
+    async def update_deployment_status(
+        deployment_id: uuid.UUID, status: DeploymentStatus
+    ) -> DeploymentID:
+        result = await Deployment.find_one(
+            Deployment.deployment_id == deployment_id
+        ).set(
+            {
+                Deployment.status: status.status,
+                Deployment.info: status.info,
             }
         )
         if result.modified_count == 0:

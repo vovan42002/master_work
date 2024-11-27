@@ -1,2 +1,4 @@
 .mongo
 .dist
+.deployments
+.rabbitmq

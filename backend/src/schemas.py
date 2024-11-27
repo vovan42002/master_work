@@ -135,9 +135,27 @@ class DeploymentID(BaseModel):
     deployment_id: UUID
 
 
+class DeploymentStatusEnum(str, Enum):
+    success = "success"
+    failed = "failed"
+    in_process = "in_process"
+    none = "null"
+
+
 class DeploymentCreate(AppBaseSchema):
     username: str
-    parameters: Dict[str, str]
+    status: Optional[DeploymentStatusEnum] = Field(
+        DeploymentStatusEnum.none,
+        title="Status",
+        description="Optional deployment status",
+        examples=["null", "in_process", "completed", "failed"],
+    )
+    info: Optional[dict] = Field(
+        {},
+        title="Deployment info",
+        description="Optional deployment info",
+    )
+    parameters: Dict[str, Dict[str, str]]
 
 
 class DeploymentUpdate(BaseModel):
@@ -157,4 +175,24 @@ class DeploymentUpdate(BaseModel):
             )
         return value
 
-    parameters: Dict[str, str]
+    status: Optional[DeploymentStatusEnum] = Field(
+        DeploymentStatusEnum.none,
+        title="Status",
+        description="Optional deployment status",
+        examples=["null", "in_process", "completed", "failed"],
+    )
+    info: Optional[dict] = Field(
+        {},
+        title="Deployment info",
+        description="Optional deployment info",
+    )
+    parameters: Dict[str, Dict[str, str]]
+
+
+class DeploymentStatus(BaseModel):
+    status: DeploymentStatusEnum
+    info: Optional[dict] = Field(
+        {},
+        title="Deployment info",
+        description="Optional deployment info",
+    )
