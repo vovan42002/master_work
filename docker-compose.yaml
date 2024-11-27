@@ -37,6 +37,61 @@ services:
       REACT_APP_AUTH_SERVICE_BASE_URL: http://localhost:8003
       REACT_APP_APPLICATIONS_SERVICE_BASE_URL: http://localhost:8002
 
+  broker:
+    image: rabbitmq:4-alpine
+    volumes:
+      - .rabbitmq:/var/lib/rabbitmq/mnesia/
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit
+      - RABBITMQ_DEFAULT_VHOST=rabbit
+      - RABBITMQ_DEFAULT_PASS=verysecurerabbit
+
+  deploy_backend:
+    image: deploy_backend
+    build:
+      context: deploy_backend
+      target: production
+    depends_on:
+      - broker
+    ports:
+      - 8004:8000
+    environment:
+      ACCESS_TOKEN: oe6EiSh2ooth9boh8OoSheihie9soo3o
+      DEPLOYMENTS_DIR: "/deployments"
+      HELM_REGISTRY_URL: "https://helm.elastic.co"
+      HELM_REGISTRY_USERNAME: "test_user"
+      HELM_REGISTRY_USERNAME_PASSWORD: "test_user_pass"
+      KUBERNETES_NAMESPACE: "test-ns"
+      CELERY_BROKER: "amqp://rabbit:verysecurerabbit@broker:5672/rabbit"
+      BACKEND_BASE_URL: http://master_work-backend-1:8000
+      BACKEND_ACCESS_TOKEN: "tttttoken"
+    volumes:
+      - .deployments:/deployments
+
+  deploy_backend_worker:
+    image: deploy_backend_worker
+    build:
+      context: deploy_backend
+      target: production
+    depends_on:
+      - broker
+    environment:
+      ACCESS_TOKEN: oe6EiSh2ooth9boh8OoSheihie9soo3o
+      DEPLOYMENTS_DIR: "/deployments"
+      HELM_REGISTRY_URL: "https://helm.elastic.co"
+      HELM_REGISTRY_USERNAME: "test_user"
+      HELM_REGISTRY_USERNAME_PASSWORD: "test_user_pass"
+      KUBERNETES_NAMESPACE: "test-ns"
+      CELERY_BROKER: "amqp://rabbit:verysecurerabbit@broker:5672/rabbit"
+      BACKEND_BASE_URL: http://master_work-backend-1:8000
+      BACKEND_ACCESS_TOKEN: "tttttoken"
+    volumes:
+      - .deployments:/deployments
+    command: /.venv/bin/python -m celery -A celery_app.app worker -E -Q deployments
+
   mongodb:
     image: mongo:8
     ports:
@@ -51,6 +106,7 @@ services:
     image: backend-dev
     depends_on:
       - mongodb
+      - deploy_backend
     build:
       context: backend
       target: production
@@ -75,6 +131,7 @@ services:
       - frontend
       - backend
       - mongodb
+      - deploy_backend
     command:
       - sh
       - -c
@@ -87,5 +144,8 @@ services:
         echo "To access the backend docs follow the link: http://localhost:8002/docs";
         echo "----------------------------------------------";
         echo "----------------------------------------------";
-        echo "To access the auth docs follow the link: http://localhost:8003/docs";
+        echo "To access the auth_backend docs follow the link: http://localhost:8003/docs";
+        echo "----------------------------------------------";
+        echo "----------------------------------------------";
+        echo "To access the deploy_backend docs follow the link: http://localhost:8004/docs";
         echo "----------------------------------------------";
