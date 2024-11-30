@@ -1,6 +1,6 @@
 import jwt
 from datetime import datetime, timedelta, timezone
-from fastapi import HTTPException, Response
+from fastapi import HTTPException
 from schemas.config import settings
 
 
@@ -78,36 +78,3 @@ class JWTTokenHandler:
             raise HTTPException(status_code=401, detail="Token has expired")
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=401, detail="Invalid token")
-
-    @staticmethod
-    def set_refresh_token_cookie(response: Response, refresh_token: str):
-        """Set the refresh token in a secure, HTTP-only cookie."""
-        response.set_cookie(
-            key="refresh_token",
-            value=refresh_token,
-            httponly=True,
-            secure=settings.secure_cookie,
-            samesite="Lax",
-        )
-
-    @staticmethod
-    def clear_refresh_token_cookie(response: Response):
-        """Clear the refresh token from the cookies."""
-        response.delete_cookie(
-            "refresh_token",
-            httponly=True,
-            secure=settings.secure_cookie,
-            samesite="Lax",
-            path="/",
-        )
-
-    @staticmethod
-    def clear_access_token_cookie(response: Response):
-        """Clear the access token from the cookies."""
-        response.delete_cookie(
-            "access_token",
-            httponly=True,
-            secure=settings.secure_cookie,
-            samesite="Lax",
-            path="/",
-        )

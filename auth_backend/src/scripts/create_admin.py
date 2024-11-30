@@ -2,7 +2,7 @@ import logging
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from database import AsyncSessionLocal as SessionLocal
+from database import AsyncSessionLocal as SessionLocal, async_engine, Base
 from models.user import UserModel
 from auth.password_utils import hash_password
 from schemas.config import settings
@@ -43,6 +43,8 @@ async def create_admin_user(db_session, email, name, password):
 
 
 async def main():
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     async with SessionLocal() as db:
         if await check_admin_exists(db, settings.admin_email):
             logger.info("Admin user already exists.")

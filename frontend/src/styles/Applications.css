@@ -1,0 +1,133 @@
+.root_container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.frame {
+    margin-bottom: 20px;
+    border: 2px solid #dbdbdb;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.header {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin: 10px 0;
+}
+
+
+
+.scrollable-content {
+    max-height: 300px;
+    /* Limit height */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    padding-right: 10px;
+    /* Avoid scrollbar overlapping */
+}
+
+/* Styles for lists */
+.list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    /* Компоненти по краях */
+    align-items: center;
+    /* Вирівнювання по вертикалі */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.app-name {
+    font-size: 16px;
+    color: #333;
+    background-color: #ececec;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.add-to-my-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.add-to-my-button:hover {
+    background-color: #0056b3;
+}
+
+/* Styles for the My Applications table */
+.my-applications-table {
+    width: 100%;
+    background-color: #fff;
+}
+
+.my-applications-table th,
+.my-applications-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.my-applications-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.my-applications-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.configure-button,
+.delete-button {
+    padding: 10px 15px;
+    width: 100px;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 5px;
+}
+
+.configure-button {
+    background-color: green;
+}
+
+.configure-button:hover {
+    background-color: #033b10;
+}
+
+.delete-button {
+    background-color: red;
+}
+
+.delete-button:hover {
+    background-color: #b2091a;
+}

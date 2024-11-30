@@ -9,6 +9,7 @@ uvicorn = "*"
 pydantic-settings = "*"
 motor = "*"
 beanie = "*"
+httpx = "*"
 
 [requires]
 python_version = "3.12"

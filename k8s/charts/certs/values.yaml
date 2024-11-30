@@ -1,0 +1,10 @@
+tls:
+  configuration:
+    crt: ""
+    key: ""
+  backend:
+    crt: ""
+    key: ""
+  auth:
+    crt: ""
+    key: ""

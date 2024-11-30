@@ -1,0 +1,60 @@
+{{- if .Values.ingress.enabled -}}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-redirect-scheme
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+    port: "443"
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "frontend.fullname" . }}-http
+  annotations:
+  {{- with .Values.ingress.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`{{ .Values.ingress.host.name }}`)
+      kind: Rule
+      services:
+        - kind: Service
+          name: {{ include "frontend.fullname" . }}
+          port: {{ .Values.service.port }}
+      middlewares:
+        - name: {{ .Release.Name }}-redirect-scheme
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "frontend.fullname" . }}-https
+  annotations:
+  {{- with .Values.ingress.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`{{ .Values.ingress.host.name }}`) && PathPrefix(`{{ .Values.ingress.host.path }}`)
+      services:
+        - kind: Service
+          name: {{ include "frontend.fullname" $ }}
+          namespace: {{ .Release.Namespace }}
+          port: {{ .Values.service.port }}
+          scheme: http
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    secretName: {{ .Values.ingress.tls.secretName }}
+    domains:
+      - main: {{ .Values.ingress.host.name }}
+  {{- end }}
+{{- end }}

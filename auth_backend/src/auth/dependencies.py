@@ -3,6 +3,7 @@ from fastapi import Depends, HTTPException, status, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from jwt import PyJWTError
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from models.user import UserModel
 from database import get_db
@@ -12,20 +13,14 @@ from schemas.config import settings
 logger = logging.getLogger(__name__)
 
 
+security = HTTPBearer()
+
+
 async def get_current_user(
-    db: AsyncSession = Depends(get_db), token: str = Cookie(None, alias="access_token")
+    db: AsyncSession = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> UserModel:
-    """
-    Retrieves the authenticated user based on a JWT token from cookies.
-
-    Args:
-        db: Database session for user data querying.
-        token: JWT token for authentication.
-
-    Returns:
-        The authenticated UserModel instance or raises HTTPException for errors.
-    """
-    if not token:
+    if not credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="JWT token is missing",
@@ -34,7 +29,7 @@ async def get_current_user(
 
     try:
         payload = JWTTokenHandler.verify_token(
-            token,
+            credentials.credentials,
             credentials_exception=HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",

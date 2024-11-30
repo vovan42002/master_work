@@ -1,0 +1,6 @@
+service:
+  spec:
+    loadBalancerIP: 34.118.23.178
+logs:
+  access:
+    enabled: true

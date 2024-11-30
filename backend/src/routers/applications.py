@@ -6,11 +6,13 @@ from services.applications_service import ApplicationsService
 
 
 router = APIRouter(prefix="/applications")
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 
 @router.get("", status_code=status.HTTP_200_OK, response_model=ApplicationsList)
 async def get_applications():
-    logging.info("Request to get all applications")
+    logger.info("Request to get all applications")
     service = ApplicationsService()
     return await service.get_all_applications()
 
@@ -21,15 +23,8 @@ async def get_applications():
     response_model=VersionsList,
 )
 async def get_application_versions(application_name: str):
-    logging.info(f"Request to get all {application_name} versions")
+    logger.info(f"Request to get all {application_name} versions")
     service = ApplicationsService()
     return await service.get_all_versions_by_application_name(
         application_name=application_name
     )
-
-
-@router.get("/my", status_code=status.HTTP_200_OK, response_model=ApplicationsList)
-async def get_user_applications():
-    logging.info("Request to get all user deployments (applications)")
-    service = ApplicationsService()
-    return await service.get_all_applications()

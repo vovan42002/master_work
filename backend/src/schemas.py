@@ -15,8 +15,12 @@ class MongoSettings(BaseSettings):
     AUTH_DB_NAME: str = Field(..., alias="MONGO_AUTH_DB_NAME")
 
 
-class ApplicationSettings(BaseModel):
+class ApplicationSettings(BaseSettings):
     logLevel: str = "debug"
+    auth_backend_base_url: str
+    deploy_backend_base_url: str
+    deploy_backend_token: str
+    access_token: str
 
 
 class Settings(BaseModel):
@@ -189,6 +193,41 @@ class DeploymentUpdate(BaseModel):
     parameters: Dict[str, Dict[str, str]]
 
 
+class DeploymentToDeploy(BaseModel):
+    application_name: str = Field(
+        ...,
+        title="Name",
+        description="Name of the application",
+        examples=["my-app", "MyApp123"],
+    )
+    version: str = Field(
+        ...,
+        title="Version",
+        description="Application version",
+        examples=["1.0.0", "1.0.9"],
+    )
+
+    # Validator for semantic versioning
+    @field_validator("version")
+    def validate_semantic_version(cls, value):
+        if not re.match(r"^\d+\.\d+\.\d+$", value):
+            raise ValueError(
+                "version must be in semantic versioning format (MAJOR.MINOR.PATCH)"
+            )
+        return value
+
+    # Validator for application_name to allow only letters, numbers, dashes, and underscores
+    @field_validator("application_name")
+    def validate_application_name(cls, value):
+        if not re.match(r"^[\w-]+$", value):
+            raise ValueError(
+                "application_name can only contain letters, numbers, dashes, or underscores"
+            )
+        return value
+
+    parameters: Dict[str, Dict[str, str]]
+
+
 class DeploymentStatus(BaseModel):
     status: DeploymentStatusEnum
     info: Optional[dict] = Field(
@@ -196,3 +235,16 @@ class DeploymentStatus(BaseModel):
         title="Deployment info",
         description="Optional deployment info",
     )
+
+
+class AuthAdapterUser(BaseModel):
+    is_admin: bool
+    username: str
+
+
+class DeploymentResponse(AppBaseSchema):
+    deployment_id: str
+
+
+class UserDeployments(BaseModel):
+    deployments: List[DeploymentResponse]

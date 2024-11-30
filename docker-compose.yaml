@@ -87,7 +87,7 @@ services:
       KUBERNETES_NAMESPACE: "test-ns"
       CELERY_BROKER: "amqp://rabbit:verysecurerabbit@broker:5672/rabbit"
       BACKEND_BASE_URL: http://master_work-backend-1:8000
-      BACKEND_ACCESS_TOKEN: "tttttoken"
+      BACKEND_ACCESS_TOKEN: "HahgiC8ar2aepaereneef3Yiey0NahCh"
     volumes:
       - .deployments:/deployments
     command: /.venv/bin/python -m celery -A celery_app.app worker -E -Q deployments
@@ -119,6 +119,10 @@ services:
       MONGO_PORT: 27017
       MONGO_DB_NAME: backend
       MONGO_AUTH_DB_NAME: admin
+      AUTH_BACKEND_BASE_URL: http://master_work-auth_backend-1:8000
+      DEPLOY_BACKEND_BASE_URL: http://master_work-deploy_backend-1:8000
+      DEPLOY_BACKEND_TOKEN: oe6EiSh2ooth9boh8OoSheihie9soo3o
+      ACCESS_TOKEN: HahgiC8ar2aepaereneef3Yiey0NahCh
 
   mongosh:
     image: rtsp/mongosh
@@ -136,7 +140,7 @@ services:
       - sh
       - -c
       - |
-        sleep 1;
+        sleep 7;
         echo "----------------------------------------------";
         echo "To access the frontend follow the link: http://localhost:8001";
         echo "----------------------------------------------";
@@ -149,3 +153,10 @@ services:
         echo "----------------------------------------------";
         echo "To access the deploy_backend docs follow the link: http://localhost:8004/docs";
         echo "----------------------------------------------";
+
+#{
+#  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImV4cCI6MTczMjg4Mjc0Nn0.4B33jxd4YPI3hlExpU_YBWuF1CKI5H8SD8sXQ3LzK8k",
+#  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImV4cCI6MTczMjc5ODE0Nn0.Qu5pzHTR9qoFiyhwIKHhdZXB_dmrfYB5a6MLnl7A4LA"
+#}
+#
+#

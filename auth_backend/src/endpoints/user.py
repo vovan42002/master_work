@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any
 
@@ -43,7 +44,7 @@ async def create_user_endpoint(
 @router.delete(
     "/users/{user_id:int}",
     response_model=UserID,
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
 )
 async def block_user_endpoint(
     user_id: int,
@@ -72,3 +73,16 @@ async def block_user_endpoint(
 
     # Return the response in the format expected by UserID
     return UserID(id=deleted_user_id)
+
+
+@router.get("/users/me")
+async def get_user_role(
+    authenticated_user: UserModel = Depends(get_current_user),
+):
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "is_admin": authenticated_user.is_admin,
+            "username": authenticated_user.username,
+        },
+    )

@@ -1,0 +1,58 @@
+replicaCount: 1
+
+image:
+  repository: vovan4/auth-backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+app:
+  # it should start with spostgresql+asyncpg://
+  database:
+    user: ""
+    password: ""
+    host: ""
+    dbName: ""
+  secretKey: ""
+  adminEmail: "admin@example.com"
+  adminPassword: ""
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  host:
+    name: ""
+    path: "/"
+  tls:
+    enabled: true
+    secretName: "certs-backend"
+
+resources: {}
+
+#livenessProbe:
+#  httpGet:
+#    path: /health
+#    port: http
+#readinessProbe:
+#  httpGet:
+#    path: /health
+#    port: http
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
