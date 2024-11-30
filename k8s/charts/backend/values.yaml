@@ -1,0 +1,61 @@
+replicaCount: 1
+
+image:
+  repository: vovan4/backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+app:
+  mongo:
+    user: ""
+    password: ""
+    host: ""
+    port: "27017"
+    dbName: ""
+    authDbName: ""
+  authBackendBaseUrl: ""
+  deployBackendBaseUrl: ""
+  deployBackendToken: ""
+  acccessToken: ""
+
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  host:
+    name: ""
+    path: "/"
+  tls:
+    enabled: true
+    secretName: "certs-backend"
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}

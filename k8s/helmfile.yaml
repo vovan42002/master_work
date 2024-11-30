@@ -1,0 +1,131 @@
+---
+helmDefaults:
+  wait: true
+  historyMax: 3
+  atomic: true
+  timeout: 300
+  createNamespace: false
+
+repositories:
+
+  - name: bitnami
+    url: registry-1.docker.io/bitnamicharts
+    oci: true
+
+  - name: traefik
+    url: https://traefik.github.io/charts
+
+commonLabels:
+  service-name: internal
+
+releases:
+
+
+  - name: traefik
+    installed: true
+    namespace: default
+    chart: traefik/traefik
+    version: 33.0.0
+    disableValidation: true
+    values:
+      - configs/traefik.yaml
+
+  - name: certs
+    installed: true
+    namespace: default
+    chart: charts/certs
+    secrets:
+      - configs/certs-configuration-secret.yaml
+      - configs/certs-backend-secret.yaml
+      - configs/certs-auth-secret.yaml
+
+  - name: postgres-auth
+    installed: true
+    namespace: default
+    chart: bitnami/postgresql
+    version: 16.2.3
+    values:
+      - primary:
+          persistence:
+            size: 1Gi
+    secrets:
+      - configs/auth-postgres-secret.yaml
+
+  - name: auth-backend
+    installed: true
+    namespace: default
+    chart: charts/auth-backend
+    needs:
+      - default/postgres-auth
+    secrets:
+      - configs/auth-backend-secret.yaml
+    values:
+      - image:
+          tag: "1.0.3"
+      - ingress:
+          enabled: true
+          host:
+            name: "auth.master-work-volodymyr.com"
+            path: "/"
+          tls:
+            enabled: true
+            secretName: "certs-auth"
+
+
+  - name: backend-mongodb
+    installed: true
+    namespace: default
+    chart: bitnami/mongodb
+    version: 16.3.1
+    values:
+      - primary:
+          persistence:
+            size: 1Gi
+      - architecture: standalone
+      - useStatefulSet: true
+        
+    secrets:
+      - configs/backend-mongodb-secret.yaml
+
+  - name: backend
+    installed: true
+    namespace: default
+    chart: charts/backend
+    needs:
+      - default/backend-mongodb
+    secrets:
+      - configs/backend-secret.yaml
+    values:
+      - image:
+          tag: "1.0.0"
+      - ingress:
+          enabled: true
+          host:
+            name: "backend.master-work-volodymyr.com"
+            path: "/"
+          tls:
+            enabled: true
+            secretName: "certs-backend"
+
+  - name: frontend
+    installed: true
+    namespace: default
+    chart: charts/frontend
+    needs:
+      - default/backend
+      - default/auth-backend
+    values:
+      - image:
+          tag: "1.0.0"
+      - app:
+          authServiceBaseUrl: "https://auth.master-work-volodymyr.com"
+          applicationsServiceBaseUrl: "https://backend.master-work-volodymyr.com"
+      - ingress:
+          enabled: true
+          host:
+            name: "configuration.master-work-volodymyr.com"
+            path: "/"
+          tls:
+            enabled: true
+            secretName: "certs-configuration"
+

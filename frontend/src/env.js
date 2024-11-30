@@ -1,14 +1,14 @@
-export const REACT_APP_AUTH_SERVICE_BASE_URL = "http://localhost:8003";
-export const REACT_APP_APPLICATIONS_SERVICE_BASE_URL = "http://localhost:8002";
+export const AUTH_SERVICE_BASE_URL = "https://auth.master-work-volodymyr.com";
+export const APPLICATIONS_SERVICE_BASE_URL = "https://backend.master-work-volodymyr.com";
 
-if (!REACT_APP_AUTH_SERVICE_BASE_URL) {
+if (!AUTH_SERVICE_BASE_URL) {
     console.warn(
-        'Environment variable REACT_APP_AUTH_SERVICE_BASE_URL is not defined. Please ensure it is set in your .env file.'
+        'Environment variable AUTH_SERVICE_BASE_URL is not defined. Please ensure it is set in your .env file.'
     );
 }
 
-if (!REACT_APP_AUTH_SERVICE_BASE_URL) {
+if (!AUTH_SERVICE_BASE_URL) {
     console.warn(
-        'Environment variable REACT_APP_APPLICATIONS_SERVICE_BASE_URL is not defined. Please ensure it is set in your .env file.'
+        'Environment variable APPLICATIONS_SERVICE_BASE_URL is not defined. Please ensure it is set in your .env file.'
     );
 }

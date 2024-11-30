@@ -1,0 +1,326 @@
+/* General Layout */
+.configure-container {
+    max-width: 800px;
+    width: 600px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.header h1 {
+    font-size: 24px;
+    color: #4a90e2;
+    margin-bottom: 10px;
+}
+
+.header h2 {
+    font-size: 18px;
+    color: #6c757d;
+}
+
+/* Section Styling */
+.container-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.container-section h3 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+}
+
+/* Environment Variables Styling */
+.env-vars {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    font-weight: bold;
+}
+
+.env-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 95%;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+
+.env-label {
+    font-size: 14px;
+    color: black;
+    margin-bottom: 5px;
+}
+
+/* Input Styles */
+.input-text {
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0;
+}
+
+.input-checkbox {
+    appearance: none;
+    /* Remove the default checkbox style */
+    width: 24px;
+    height: 24px;
+    background-color: #f2f2f2;
+    /* Light gray for the unchecked state */
+    border: 2px solid #ccc;
+
+    /* Makes it circular */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: inline-block;
+    /* Ensures proper size and alignment */
+    position: relative;
+    /* Needed for the checkmark */
+}
+
+.input-checkbox:checked {
+    background-color: #4caf50;
+    /* Green for the checked state */
+    border-color: #4caf50;
+    /* Match the green background */
+}
+
+.input-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    width: 5px;
+    height: 12px;
+    border: solid white;
+    /* White tick */
+    border-width: 0 3px 3px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    /* Creates the tick */
+    transition: all 0.2s ease;
+}
+
+.input-checkbox:hover {
+    background-color: #e6e6e6;
+    /* Slight hover effect for unchecked state */
+    border-color: #888;
+    /* Darker border on hover */
+}
+
+.input-checkbox:checked:hover {
+    background-color: #45a049;
+    /* Slightly darker green on hover */
+}
+
+
+.input-text:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+
+
+/* Success and Error Messages */
+.success {
+    color: #28a745;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.error {
+    color: #d9534f;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.configure-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+    position: relative;
+    /* Ensures sticky positioning works */
+}
+
+.scrollable-config {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.deploy-button {
+    position: static;
+    bottom: 20px;
+    /* Keeps it at the bottom of the visible area */
+    margin: 20px auto;
+    /* Adds space above and below */
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #2275d3;
+    /* Semi-transparent bright blue */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    /* Center the button */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.deploy-button:hover {
+    background-color: rgba(5, 70, 136, 0.9);
+    transform: scale(1.05);
+    /* Subtle scale effect */
+}
+
+.loading-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.loading-animation {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.deployment-info {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.deployment-info pre {
+    max-width: 100%;
+    max-height: 300px;
+    overflow-x: auto;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+
+
+.version-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.change-version-button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.change-version-button:hover {
+    background-color: #0056b3;
+}
+
+
+input[type="text"],
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+    margin-bottom: 25px;
+}
+
+input[type="text"]:focus,
+select:focus,
+input[type="file"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.close-button {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    /* Add some space above */
+}
+
+.close-button:hover {
+    background: #c82333;
+}

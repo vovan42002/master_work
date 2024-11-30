@@ -6,6 +6,7 @@ import logging
 
 
 logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 
 @app.task(queue="deployments")

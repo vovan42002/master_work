@@ -1,8 +1,19 @@
-from schemas import DeploymentCreate, DeploymentID, DeploymentUpdate, DeploymentStatus
+from schemas import (
+    DeploymentCreate,
+    DeploymentID,
+    DeploymentUpdate,
+    DeploymentStatus,
+    DeploymentResponse,
+    UserDeployments,
+)
 from fastapi import HTTPException, status
 from models import Deployment
 import uuid
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 
 class DeploymentsService:
@@ -47,7 +58,8 @@ class DeploymentsService:
                 Deployment.parameters: new_deployment.parameters,
             }
         )
-        if result.modified_count == 0:
+        obj = await Deployment.find_one(Deployment.deployment_id == deployment_id)
+        if result.modified_count == 0 and obj is None:
             raise DeploymentsService._raise_http_error(deployment_id)
         return DeploymentID(deployment_id=deployment_id)
 
@@ -66,6 +78,25 @@ class DeploymentsService:
         if result.modified_count == 0:
             raise DeploymentsService._raise_http_error(deployment_id)
         return DeploymentID(deployment_id=deployment_id)
+
+    @staticmethod
+    async def get_all_user_deployments(username: str) -> UserDeployments:
+        documents = await Deployment.find_many(
+            Deployment.username == username
+        ).to_list()
+        if not documents:
+            logger.warning(f"There aren't any applications where {username} is owner")
+        deployments = []
+        for doc in documents:
+            deployments.append(
+                DeploymentResponse(
+                    application_name=doc.application_name,
+                    version=doc.version,
+                    deployment_id=str(doc.deployment_id),
+                )
+            )
+
+        return UserDeployments(deployments=deployments)
 
     @staticmethod
     def _raise_http_error(deployment_id: uuid.UUID) -> HTTPException:

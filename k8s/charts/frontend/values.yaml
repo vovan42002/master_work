@@ -1,0 +1,52 @@
+replicaCount: 1
+
+image:
+  repository: vovan4/frontend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+app:
+  authServiceBaseUrl: ""
+  applicationsServiceBaseUrl: ""
+
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  host:
+    name: ""
+    path: "/"
+  tls:
+    enabled: true
+    secretName: "certs-configuration"
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}

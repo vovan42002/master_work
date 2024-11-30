@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 
 logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 
 @asynccontextmanager
