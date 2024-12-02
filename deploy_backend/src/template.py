@@ -51,7 +51,7 @@ def generate_helmfile_and_save(
         ],
         "releases": [
             {
-                "name": deployment_id,
+                "name": f"rel-{deployment_id.split("-")[0]}",
                 "namespace": namespace,
                 "installed": installed,
                 "chart": f"common/{application_name}",

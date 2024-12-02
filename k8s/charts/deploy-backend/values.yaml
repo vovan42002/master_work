@@ -1,0 +1,57 @@
+replicaCount: 1
+
+image:
+  repository: vovan4/deploy-backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+app:
+  worker:
+    command: "" # for worker: /.venv/bin/python -m celery -A celery_app.app worker -E -Q deployments
+  acccessToken: ""
+  deploymentsDir: "/deployments"
+  helm:
+    registryUrl: ""
+    username: ""
+    usernamePassword: ""
+  k8s:
+    namespace: ""
+    kubeconfigFileData: ""
+  celeryBroker: ""
+  backendBaseUrl: "http://backend:8000"
+  backendAccessToken: ""
+
+pvc:
+  storageClass: "standard-rwo"
+  requests:
+    storage: 1Gi
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
