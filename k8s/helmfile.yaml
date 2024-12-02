@@ -1,3 +1,7 @@
+environments:
+  default:
+    values:
+      - namespace: default
 ---
 helmDefaults:
   wait: true
@@ -19,11 +23,9 @@ commonLabels:
   service-name: internal
 
 releases:
-
-
   - name: traefik
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: traefik/traefik
     version: 33.0.0
     disableValidation: true
@@ -32,7 +34,7 @@ releases:
 
   - name: certs
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: charts/certs
     secrets:
       - configs/certs-configuration-secret.yaml
@@ -41,9 +43,11 @@ releases:
 
   - name: postgres-auth
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: bitnami/postgresql
     version: 16.2.3
+    needs:
+      - {{ .Environment.Values.namespace }}/traefik
     values:
       - primary:
           persistence:
@@ -53,10 +57,11 @@ releases:
 
   - name: auth-backend
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: charts/auth-backend
     needs:
-      - default/postgres-auth
+      - {{ .Environment.Values.namespace }}/postgres-auth
+      - {{ .Environment.Values.namespace }}/traefik
     secrets:
       - configs/auth-backend-secret.yaml
     values:
@@ -74,13 +79,12 @@ releases:
 
   - name: backend-mongodb
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: bitnami/mongodb
     version: 16.3.1
     values:
-      - primary:
-          persistence:
-            size: 1Gi
+      - persistence:
+          size: 1Gi
       - architecture: standalone
       - useStatefulSet: true
         
@@ -89,10 +93,11 @@ releases:
 
   - name: backend
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: charts/backend
     needs:
-      - default/backend-mongodb
+      - {{ .Environment.Values.namespace }}/backend-mongodb
+      - {{ .Environment.Values.namespace }}/traefik
     secrets:
       - configs/backend-secret.yaml
     values:
@@ -109,11 +114,12 @@ releases:
 
   - name: frontend
     installed: true
-    namespace: default
+    namespace: {{ .Environment.Values.namespace }}
     chart: charts/frontend
     needs:
-      - default/backend
-      - default/auth-backend
+      - {{ .Environment.Values.namespace }}/backend
+      - {{ .Environment.Values.namespace }}/auth-backend
+      - {{ .Environment.Values.namespace }}/traefik
     values:
       - image:
           tag: "1.0.0"
@@ -129,3 +135,32 @@ releases:
             enabled: true
             secretName: "certs-configuration"
 
+  - name: rabbitmq
+    installed: true
+    namespace: {{ .Environment.Values.namespace }}
+    chart: bitnami/rabbitmq
+    version: 15.1.0
+    secrets:
+      - configs/rabbitmq-secret.yaml
+    values:
+      - persistence:
+          size: 1Gi
+
+  - name: deploy-backend
+    installed: true
+    namespace: {{ .Environment.Values.namespace }}
+    chart: charts/deploy-backend
+    needs:
+      - {{ .Environment.Values.namespace }}/rabbitmq
+      - {{ .Environment.Values.namespace }}/traefik
+    secrets:
+      - configs/deploy-backend-secret.yaml
+    values:
+      - image:
+          pullPolicy: Always
+          tag: "1.0.2"
+      - app:
+          k8s:
+            namespace: {{ .Environment.Values.namespace }}
+          worker:
+            command: /.venv/bin/python -m celery -A celery_app.app worker -E -Q deployments
