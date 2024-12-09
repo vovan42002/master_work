@@ -1,5 +1,5 @@
-export const AUTH_SERVICE_BASE_URL = "https://auth.master-work-volodymyr.com";
-export const APPLICATIONS_SERVICE_BASE_URL = "https://backend.master-work-volodymyr.com";
+export const AUTH_SERVICE_BASE_URL = "https://auth.master-work-volodymyr.com"; //"http://localhost:8003";
+export const APPLICATIONS_SERVICE_BASE_URL = "https://backend.master-work-volodymyr.com"; //"http://localhost:8002";
 
 if (!AUTH_SERVICE_BASE_URL) {
     console.warn(

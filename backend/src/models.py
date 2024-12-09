@@ -16,14 +16,6 @@ class Application(AppSchema, Document):
         name = "schemas"  # Collection name in MongoDB
 
 
-class Counter(Document):
-    name: str
-    value: int
-
-    class Settings:
-        name = "counters"
-
-
 class Deployment(DeploymentCreate, Document):
     adding_timestamp: Indexed(datetime)  # Indexed field for timestamp
     deployment_id: UUID
