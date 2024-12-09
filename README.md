@@ -41,7 +41,6 @@ Possible roles:
 
 2. Delete user `DELETE /v1/users/{user_id}`
 3. Get user `GET /v1/users/{user_id}`
-4. Update user partially `PATCH /v1/users/{user_id}`
 
 
 #### Login

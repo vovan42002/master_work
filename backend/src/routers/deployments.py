@@ -107,7 +107,10 @@ async def delete_deployment(
             status_code=fastapi_status.HTTP_403_FORBIDDEN,
             content=f"You can get change a deployment {deployment_id}, because you are not an owner",
         )
-    return await service.delete_deployment(deployment_id=deployment_id)
+    deploy_adapter = DeployAdapter(deployment_id=deployment_id)
+    await deploy_adapter.uninstall_deployment()
+    await service.delete_deployment(deployment_id=deployment_id)
+    return DeploymentID(deployment_id=deployment_id)
 
 
 @router.put("/{deployment_id}", status_code=fastapi_status.HTTP_200_OK)

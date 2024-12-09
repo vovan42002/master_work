@@ -1,7 +1,7 @@
 from celery_app import app
 from adapters.helmfile import Helmfile
 from adapters.backend import Backend
-from schemas import DeploymentStatus, DeploymentResult
+from schemas import DeploymentStatus, DeploymentResult, DeploymentID
 import logging
 
 
@@ -49,3 +49,18 @@ def deploy(deployment_id: str) -> DeploymentResult:
     backend.update_status(deploy_result=deploy_result)
     logger.info(f"Deployment {deployment_id} was successfull")
     return deploy_result
+
+
+@app.task(queue="deployments")
+def uninstall(deployment_id: str) -> DeploymentID:
+    helmfile = Helmfile(deployment_id=deployment_id)
+    destroy_result = helmfile.destroy()
+
+    if destroy_result.exit_code != 0:
+        logger.error(
+            msg="helmfile destroy command failed",
+            extra={"details": destroy_result.stderr},
+        )
+        raise Exception(destroy_result.stderr)
+    logger.info(f"Deployment {deployment_id} uninstalled successfully")
+    return DeploymentID(deployment_id=deployment_id)

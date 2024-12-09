@@ -14,9 +14,9 @@ class Helmfile:
             timeout=settings.deployment_timeout,
         )
 
-    # def lint(self) -> ShellExecutionResult:
-    #    return self.shell.call_in_shell(
-    #        command="helmfile lint",
-    #        cwd=f"{settings.deployments_dir}/{self.deployment_id}",
-    #        timeout=settings.deployment_timeout,
-    #    )
+    def destroy(self) -> ShellExecutionResult:
+        return self.shell.call_in_shell(
+            command="helmfile destroy",
+            cwd=f"{settings.deployments_dir}/{self.deployment_id}",
+            timeout=settings.deployment_timeout,
+        )

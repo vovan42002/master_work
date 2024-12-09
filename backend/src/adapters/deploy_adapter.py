@@ -30,3 +30,20 @@ class DeployAdapter:
                 )
                 resp.raise_for_status()
             return DeploymentID(deployment_id=self.deployment_id)
+
+    async def uninstall_deployment(self) -> DeploymentID:
+        async with httpx.AsyncClient() as client:
+            resp = await client.delete(
+                url=f"{get_settings().application.deploy_backend_base_url}/v1/deployments/{self.deployment_id}",
+                headers={
+                    "Authorization": f"Bearer {get_settings().application.deploy_backend_token}",
+                    "Accept": "application/json",
+                },
+            )
+            if resp.status_code != status.HTTP_200_OK:
+                logger.error(
+                    msg=f"Failed to delete deployment using deploy subsystem",
+                    extra={"details": resp.json()},
+                )
+                resp.raise_for_status()
+            return DeploymentID(deployment_id=self.deployment_id)

@@ -27,8 +27,12 @@ const ConfigureDeployment = () => {
         const fetchSchema = async () => {
             try {
                 const response = await axios.get(
-                    `${APPLICATIONS_SERVICE_BASE_URL}/v1/schema/${appName}/${version}`
-                );
+                    `${APPLICATIONS_SERVICE_BASE_URL}/v1/schema/${appName}/${version}`, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: "Bearer " + localStorage.token,
+                    }
+                });
                 setSchema(response.data);
 
                 const initialFormData = {};
